@@ -18,5 +18,9 @@ Password is: test1234
 
 Have a look in the dmesg output for any pispot messages
 
+Current hardware used is:
+
+Ralink Technology, Corp. RT5370 Wireless Adapter
+
 ***Still work in progress***
 
