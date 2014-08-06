@@ -1,14 +1,22 @@
-hotpi
+PiSpot
 =====
 
 pi hotspot creation automatique
 ===============================
 
-https://github.com/cymplecy/pispot/
+extension of https://github.com/cymplecy/pispot/
 
 Work towards the automatic creation of hotspots in a Pi collective :)
 
-Currently just a few simple install functions to install the required packages.
+At the moment:
 
-COnfiguration code will be next followed by code to set up a hotspot automatic.
+Run install_pispot.sh
+Reboot the Pi
+
+Look for an access point called MY_AP
+Password is: test1234
+
+Have a look in the dmesg output for any pispot messages
+
+***Still work in progress***
 
