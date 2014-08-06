@@ -1,5 +1,32 @@
 #!/bin/bash
 
+#pispot installation script
+###########################
+#
+#Installs the pispot system
+#
+###########################
+
+
+#user configuration options
+
+#network details for the wireless network adaptor
+IP4_INT=wlan0
+IP4_CONF_TYPE=static
+IP4_ADDRESS=192.168.2.1
+IP4_NETMASK=255.255.255.0
+
+IP4_NETWORK=${IP4_ADDRESS%?}0
+IP4_BROADCAST=${IP4_ADDRESS%?}255
+IP4_GATEWAY=${IP4_ADDRESS}
+
+#dhcp server configuration details
+IP4_DNS1=8.8.8.8.8
+IP4_DNS2=4.4.4.4
+IP4_STARTADDRESS=${IP4_ADDRESS%?}2
+IP4_ENDADDRESS=${IP4_ADDRESS%?}50
+
+
 GREEN='\e[00;32m'
 DEFT='\e[00m'
 RED='\e[00;31m'
@@ -61,6 +88,41 @@ fi
 }
 installPackage hostapd
 installPackage isc-dhcp-server
-#configuration options code to follow
 
+#installed, so now for configuration
+
+
+#set up the wlan interface
+echo "iface $IP4_INT inet $IP4_CONF_TYPE
+    address $IP4_ADDRESS
+    netmask $IP4_NETMASK
+    broadcast $IP4_BROADCAST
+    gateway $IP4_GATEWAY">>/etc/network/interfaces
+
+#set up hostapd configuration
+
+cp /etc/hostapd/hostapd.conf hostapd.conf.bak
+cp ./hostapd.conf /etc/hostapd/
+chown root:root /etc/hostapd/hostapd.conf
+
+#setup dhcp server
+
+cp /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.bak
+cp ./isc-dhcp-server /etc/default/isc-dhcp-server
+
+cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak
+cp ./dhcpd.conf /etc/dhcp/dhcpd.conf
+chown root:root /etc/dhcp/dhcpd.conf
+
+#kill any autostart
+
+update-rc.d -f hostapd remove
+update-rc.d -f isc-dhcp-server remove
+
+#autostart everything (this will be taken care of in the normal script)
+
+ifdown wlan0
+ifup wlan0
+/etc/init.d/isc-dhcp-server start
+hostapd -B /etc/hostapd/hostapd.conf
 
