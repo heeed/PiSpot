@@ -69,7 +69,7 @@ if [ $INSTALLED == '0' ]; then
 	echo ./req_files/$1*    
 	if checkfileExists ./req_files/$1*;then
 		echo -e "${DEFT}Installing locally"
-		dpkg -i req_files/$1*
+		dpkg -i ./req_files/$1*
 	else
 		echo -e "${DEFT}No local copy found...trying for install from the repo's"
 
