@@ -66,8 +66,8 @@ if [ $INSTALLED == '0' ]; then
         echo -e "${GREEN}$1 is installed...moving on\n"
     else
         echo -e "${RED}"$1" is not installed...will install now\n"
-	echo req_files/$1*    
-	if checkfileExists $1*;then
+	echo ./req_files/$1*    
+	if checkfileExists ./req_files/$1*;then
 		echo -e "${DEFT}Installing locally"
 		dpkg -i req_files/$1*
 	else
@@ -78,7 +78,7 @@ if [ $INSTALLED == '0' ]; then
 		       exit 1
 		else
 			echo "Installing from repos"
-			apt-get install $1
+			apt-get install $1*
 		fi
 fi
 fi
