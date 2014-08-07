@@ -90,7 +90,9 @@ installPackage isc-dhcp-server
 #installed, so now for configuration
 
 
-#set up the wlan interface
+#set up the wlan interface, first back up current and then write a new one
+mv /etc/network/interfaces /etc/network/interfaces.bak
+
 echo "iface $IP4_INT inet $IP4_CONF_TYPE
     address $IP4_ADDRESS
     netmask $IP4_NETMASK
