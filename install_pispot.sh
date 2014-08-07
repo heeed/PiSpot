@@ -94,6 +94,10 @@ installPackage isc-dhcp-server
 mv /etc/network/interfaces /etc/network/interfaces.bak
 
 echo "
+    auto eth0
+    iface eth0 inet dhcp
+    
+    
     auto wlan0
     iface wlan0 inet static
     iface $IP4_INT inet $IP4_CONF_TYPE
