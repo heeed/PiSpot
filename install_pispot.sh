@@ -36,10 +36,10 @@ function checkfileExists {
 #echo $1
 if [ ! -f req_files/$1 ]; then
     #echo "File not found!"
-	return 1
+	return 0
 else
         #echo "fILE FOUND"
-	return 0
+	return 1
 fi
 }
 
