@@ -1,7 +1,7 @@
 PiSpot
-
+=======
 pi hotspot creation automatique
-###################################
+================================
 
 extension of https://github.com/cymplecy/pispot/
 
@@ -21,4 +21,4 @@ Ralink Technology, Corp. RT5370 Wireless Adapter
 0bda:8191 Realtek Semiconductor Corp. 8191SU
 
 
-*Still work in progress*
+***Still work in progress***
