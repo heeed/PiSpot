@@ -1,26 +1,14 @@
-PiSpot
+hotpi
 =====
 
 pi hotspot creation automatique
 ===============================
 
-extension of https://github.com/cymplecy/pispot/
+https://github.com/cymplecy/pispot/
 
 Work towards the automatic creation of hotspots in a Pi collective :)
 
-At the moment:
+Currently just a few simple install functions to install the required packages.
 
-Run install_pispot.sh
-Reboot the Pi
-
-Look for an access point called MY_AP
-Password is: test1234
-
-Have a look in the dmesg output for any pispot messages
-
-Current hardware used is:
-
-Ralink Technology, Corp. RT5370 Wireless Adapter
-
-***Still work in progress***
+COnfiguration code will be next followed by code to set up a hotspot automatic.
 

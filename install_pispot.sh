@@ -34,12 +34,12 @@ YELLOW='\e[00;33m'
 
 function checkfileExists {
 #echo $1
-if [ ! -f req_files/$1 ]; then
+if [ -f $1*.deb ]; then
     #echo "File not found!"
-	return 0
+        return 1
 else
         #echo "fILE FOUND"
-	return 1
+        return 0
 fi
 }
 
@@ -66,10 +66,10 @@ if [ $INSTALLED == '0' ]; then
         echo -e "${GREEN}$1 is installed...moving on\n"
     else
         echo -e "${RED}"$1" is not installed...will install now\n"
-	echo ./req_files/$1*    
-	if checkfileExists ./req_files/$1*;then
+	echo $1*    
+	if checkfileExists $1*;then
 		echo -e "${DEFT}Installing locally"
-		dpkg -i ./req_files/$1*
+		dpkg -i $1*
 	else
 		echo -e "${DEFT}No local copy found...trying for install from the repo's"
 
@@ -84,30 +84,36 @@ fi
 fi
 
 }
-installPackage hostapd
-installPackage isc-dhcp-server
+installPackage req_files/hostapd
+installPackage req_files/isc-dhcp-server
 
 #installed, so now for configuration
-
-
 #set up the wlan interface, first back up current and then write a new one
+
 mv /etc/network/interfaces /etc/network/interfaces.bak
 
 echo "
+    #auto eth0
+    #iface eth0 inet dhcp
     auto eth0
-    iface eth0 inet dhcp
+    iface eth0 inet static
+    address 192.168.1.1
+    netmask 255.255.255.0
+    broadcast 192.168.1.255
     
-    
-    auto wlan0
-    iface wlan0 inet static
+    auto $IP4_INT
     iface $IP4_INT inet $IP4_CONF_TYPE
     address $IP4_ADDRESS
     netmask $IP4_NETMASK
     broadcast $IP4_BROADCAST
     gateway $IP4_GATEWAY">>/etc/network/interfaces
 
-#set up hostapd configuration
 
+
+#set up hostapd and configuration
+
+mv /usr/sbin/hostapd /usr/sbin/hostapd.other
+cp ./req_files/new-hostapd/hostapd8 /usr/sbin/hostapd8
 cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.bak
 cp ./hostapd.conf /etc/hostapd/
 chown root:root /etc/hostapd/hostapd.conf
@@ -133,7 +139,7 @@ update-rc.d -f isc-dhcp-server remove
 mkdir /usr/share/pispot
 cp start_pispot.sh /usr/share/pispot
 chmod +x /usr/share/pispot/start_pispot.sh
-chown -r root:root /usr/share/pispot
+chown -R root:root /usr/share/pispot
 
 #sort out autoboot
 echo "Setting up autostart of the system"
