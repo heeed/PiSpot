@@ -10,8 +10,8 @@ createAdHocNetwork(){
 	rm /usr/sbin/hostapd
         usblist=`lsusb`
 	killall hostapd
-        if [[ $usblist == *0bda:8191* ]];then
-        echo "pispot: rtl8188CUS detected, using alternative hostapd">/dev/kmsg
+        if [[ $usblist == *0bda:8191* ]]||[[$usblist == *0bda:8176*]];then
+	echo "pispot: rtl8188CUS detected, using alternative hostapd">/dev/kmsg
         ln -s /usr/sbin/hostapd8 /usr/sbin/hostapd
         sed -i '/driver/c#driver=' /etc/hostapd/hostapd.conf
         else

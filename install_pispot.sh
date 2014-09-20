@@ -93,13 +93,13 @@ installPackage req_files/isc-dhcp-server
 mv /etc/network/interfaces /etc/network/interfaces.bak
 
 echo "
-    #auto eth0
-    #iface eth0 inet dhcp
+		    
+    auto lo
+    iface lo inet loopback
+    
+    iface eth0 inet dhcp
     auto eth0
-    iface eth0 inet static
-    address 192.168.1.1
-    netmask 255.255.255.0
-    broadcast 192.168.1.255
+    
     
     auto $IP4_INT
     iface $IP4_INT inet $IP4_CONF_TYPE
