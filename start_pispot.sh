@@ -3,7 +3,23 @@
 # from code by Lasse Christiansen http://lcdev.dk
 
 #ssid to search for 
-ssids=( 'CYCY' 'ClassPi' )
+#ssids=( 'CYCY' 'ClassPi' )
+
+getSSID() {
+
+ if [ ! -f $1 ]; then
+  echo "pispot: SSID's not found...exiting">/dev/kmsg
+  exit 1 
+  else
+  i=0
+    while read line # Read a line
+    do
+        ssids[i]=$line # Put it into the array
+        i=$(($i + 1))
+    done < $1
+ fi
+}
+
  
 createAdHocNetwork(){
 	
@@ -29,9 +45,11 @@ createAdHocNetwork(){
 	/usr/sbin/hostapd -B /etc/hostapd/hostapd.conf
 	#/etc/init.d/networking restart
 }
- 
 
 connected=false
+
+getSSID "/boot/ssid.txt"
+
 for ssid in "${ssids[@]}"
 do
     if iwlist wlan0 scan | grep $ssid > /dev/null
