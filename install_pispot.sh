@@ -106,7 +106,8 @@ echo "
     address $IP4_ADDRESS
     netmask $IP4_NETMASK
     broadcast $IP4_BROADCAST
-    gateway $IP4_GATEWAY">>/etc/network/interfaces
+    gateway $IP4_GATEWAY
+    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf">>/etc/network/interfaces
 
 
 
