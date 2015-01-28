@@ -9,7 +9,9 @@ Work towards the automatic creation of hotspots in a Pi collective :)
 
 At the moment:
 
-Run install_pispot.sh Reboot the Pi
+Run install_pispot.sh 
+Create /boot/ssid.txt with a list of ssids to search for. Each one on a seperate line.
+Reboot the Pi
 
 Look for an access point called MY_AP Password is: test1234
 
