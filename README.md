@@ -22,6 +22,7 @@ Have a look in the dmesg output for any pispot messages
 Current hardware that seems to work is:
 
 Ralink Technology, Corp. RT5370 Wireless Adapter
+
 0bda:8191 Realtek Semiconductor Corp. 8191SU
 
 
