@@ -10,23 +10,6 @@
 
 #user configuration options
 
-#network details for the wireless network adaptor
-IP4_INT=wlan0
-IP4_CONF_TYPE=static
-IP4_ADDRESS=192.168.2.1
-IP4_NETMASK=255.255.255.0
-
-IP4_NETWORK=${IP4_ADDRESS%?}0
-IP4_BROADCAST=${IP4_ADDRESS%?}255
-IP4_GATEWAY=${IP4_ADDRESS}
-
-#dhcp server configuration details
-IP4_DNS1=8.8.8.8.8
-IP4_DNS2=4.4.4.4
-IP4_STARTADDRESS=${IP4_ADDRESS%?}2
-IP4_ENDADDRESS=${IP4_ADDRESS%?}50
-
-
 GREEN='\e[00;32m'
 DEFT='\e[00m'
 RED='\e[00;31m'
@@ -88,29 +71,6 @@ installPackage req_files/hostapd
 installPackage req_files/isc-dhcp-server
 
 #installed, so now for configuration
-#set up the wlan interface, first back up current and then write a new one
-
-mv /etc/network/interfaces /etc/network/interfaces.bak
-
-echo "
-		    
-    auto lo
-    iface lo inet loopback
-    
-    iface eth0 inet dhcp
-    auto eth0
-    
-    
-    auto $IP4_INT
-    iface $IP4_INT inet $IP4_CONF_TYPE
-    address $IP4_ADDRESS
-    netmask $IP4_NETMASK
-    broadcast $IP4_BROADCAST
-    gateway $IP4_GATEWAY
-    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf">>/etc/network/interfaces
-
-
-
 #set up hostapd and configuration
 
 mv /usr/sbin/hostapd /usr/sbin/hostapd.other
