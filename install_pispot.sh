@@ -96,6 +96,11 @@ chown root:root /etc/dhcp/dhcpd.conf
 update-rc.d -f hostapd remove
 update-rc.d -f isc-dhcp-server remove
 
+#setup ifplugd
+
+rm /etc/default/ifplugd
+cp ifplugd /etc/default/ifplugd
+
 #intstall the start script
 mkdir /usr/share/pispot
 cp start_pispot.sh /usr/share/pispot
@@ -105,3 +110,6 @@ chown -R root:root /usr/share/pispot
 #sort out autoboot
 echo "Setting up autostart of the system"
 sed -i '$i/usr/share/pispot/start_pispot.sh' /etc/rc.local
+
+#reboot the pi
+reboot
