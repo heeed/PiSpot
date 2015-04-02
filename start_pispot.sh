@@ -1,23 +1,56 @@
 #!/bin/bash
-# RPi SSID Scanner
-# from code by Lasse Christiansen http://lcdev.dk
+#Pi SSID Scanner 
+# Part of PiSpot: https://github.com/heeed/hotpi 
+# based on code by Lasse Christiansen http://lcdev.dk
 
-#ssid to search for 
-#ssids=( 'CYCY' 'ClassPi' )
+
+
+getSSIDdetails(){
+	echo "pispot: extracting login details">/dev/kmsg
+	OLDIFS=$IFS
+ 	ssid=${ssid[@]}
+        IFS=',' read req_ssid req_psk  <<<"$ssid"
+}
 
 getSSID() {
 
- if [ ! -f $1 ]; then
-  echo "pispot: SSID's not found...exiting">/dev/kmsg
-  exit 1 
-  else
-  i=0
-    while read line # Read a line
-    do
-        ssids[i]=$line # Put it into the array
-        i=$(($i + 1))
-    done < $1
- fi
+	if [ ! -f $1 ]; then
+		echo "pispot: SSID's not found...exiting">/dev/kmsg
+  		exit 1
+  	else
+  	i=0
+    	while read line # Read a line
+    	do
+        	ssids[i]=$line # Put it into the array
+        	i=$(($i + 1))
+    	done < $1
+	fi
+}
+
+
+wlanDHCP(){
+
+	echo "pispot: swapping in $1 interfaces file">/dev/kmsg
+	IP4_INT=wlan0
+	IP4_CONF_TYPE=dhcp
+
+	mv /etc/network/interfaces /etc/network/interfaces.bak
+	echo "pispot: wpa-ssid $req_ssid" >/dev/kmsg
+	echo "
+		auto lo
+    		iface lo inet loopback
+
+    		#auto eth0
+    		allow-hotplug eth0
+    		iface eth0 inet dhcp
+
+
+    		auto $IP4_INT
+    		iface $IP4_INT inet $IP4_CONF_TYPE
+    		wpa-ssid $req_ssid
+    		wpa-psk  $req_psk
+
+">>/etc/network/interfaces
 }
 
 wlanStatic(){
@@ -35,16 +68,12 @@ IP4_GATEWAY=${IP4_ADDRESS}
 mv /etc/network/interfaces /etc/network/interfaces.bak
 
 echo "
-
     auto lo
     iface lo inet loopback
-
     #auto eth0
     allow-hotplug eth0
     iface eth0 inet dhcp
     
-
-
     auto $IP4_INT
     iface $IP4_INT inet $IP4_CONF_TYPE
     address $IP4_ADDRESS
@@ -54,33 +83,9 @@ echo "
     wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf">>/etc/network/interfaces
 }
 
-wlanDHCP(){
-#needs encoded psk entered below after the wpa-ssid $1. see https://wiki.debian.org/WiFi/HowToUse#WPA-PSK_and_WPA2-PSK
-
-echo "pispot: swapping in $1 interfaces file">/dev/kmsg
-IP4_INT=wlan0
-IP4_CONF_TYPE=dhcp
-
-mv /etc/network/interfaces /etc/network/interfaces.bak
-echo "wpa-ssid $1"
-echo "
-
-    auto lo
-    iface lo inet loopback
-
-    #auto eth0
-    allow-hotplug eth0
-    iface eth0 inet dhcp
 
 
-    auto $IP4_INT
-    iface $IP4_INT inet $IP4_CONF_TYPE
-    wpa-ssid $1
-    wpa-psk  
 
-">>/etc/network/interfaces
-}
- 
 createAdHocNetwork(){
 	echo "in create adhoc"
 	rm /usr/sbin/hostapd
@@ -106,44 +111,40 @@ createAdHocNetwork(){
 	#/etc/init.d/networking restart
 }
 
-connected=false
+
+
 
 getSSID "/boot/ssid.txt"
 
 
 for ssid in "${ssids[@]}"
 do
-    echo "pispot; looking for $ssid">/dev/kmsg
-    if iwlist wlan0 scan | grep $ssid > /dev/null
+    getSSIDdetails $ssid
+    echo "pispot; looking for $req_ssid">/dev/kmsg
+    if iwlist wlan0 scan | grep $req_ssid #> /dev/null
     then
         ifdown --force wlan0
         echo " ">/var/lib/dhcpd/dhcpd.leases
         rm /var/lib/dhcpd/dhcpd.leases~
-        wlanDHCP $ssid
-	ifup wlan0
-	if dhclient -1 wlan0
+        wlanDHCP $req_ssid
+        ifup wlan0
+        if dhclient -1 wlan0
         then
-            echo "pispot: Connected to hotspot $ssid: " > /dev/kmsg
-            connected=true
+            echo "pispot: Connected to hotspot: $req_ssid" > /dev/kmsg
             break
          else
-            echo "pispot: $ssid Hotspot not found" > /dev/kmsg
+            echo "pispot: $req_ssid Hotspot not found" > /dev/kmsg
             wpa_cli terminate
             break
-	fi
+        fi
+       else
+            echo "pispot: no known wireless networks found,,,starting a hotspot">/dev/kmsg
+	    wlanStatic
+	    if createAdHocNetwork; then
+	       echo "pispot: hotspot created" > /dev/kmsg
+            else
+	       echo "pispot: hotspot failed" > /dev/kmsg
+            fi  
     fi
 done
- 
-if ! $connected; then
-    echo "pispot: creating hotspot" > /dev/kmsg
-    wlanStatic
-    echo "pispot: about to create Ad hoc network" >/dev/kmsg
-    if createAdHocNetwork; then
-	echo "pispot: hotspot created" > /dev/kmsg
-    else
-	echo "pispot: hotspot failed" > /dev/kmsg
-    fi
-fi
- 
 exit 0
-
