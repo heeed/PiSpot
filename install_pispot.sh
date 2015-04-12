@@ -90,6 +90,10 @@ sudo sed -i '/INTERFACES=""/c\INTERFACES="wlan0"' /etc/default/isc-dhcp-server
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak
 cp ./dhcpd.conf /etc/dhcp/dhcpd.conf
 chown root:root /etc/dhcp/dhcpd.conf
+cp /etc/dhcp/dhclient.conf /etc/dhcp/dhclient.conf.bak
+cp ./dhclient.conf /etc/dhcp/dhclient.conf
+chown root:root /etc/dhcp/dhclient.conf
+
 
 #kill any autostart
 
