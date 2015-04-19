@@ -71,6 +71,15 @@ installPackage req_files/hostapd
 installPackage req_files/isc-dhcp-server
 
 #installed, so now for configuration
+#set up files in boot.
+#ssid.txt for ssid info, hotspot.txt for hotspot info
+touch /boot/ssid.txt
+touch /boot/hotspot.txt
+echo "#place config as <ssid>,<psk>">/boot/ssid.txt
+echo "testssid,testcode">>/boot/ssid.txt
+echo "#place config as <hotspot name>,<ip address of gateway>,<psk>">/boot/hotspot.txt
+echo "pispot,192.168.2.1,pispot">>/boot/hotspot.txt
+
 #set up hostapd and configuration
 
 mv /usr/sbin/hostapd /usr/sbin/hostapd.other

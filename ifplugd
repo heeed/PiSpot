@@ -11,8 +11,8 @@
 # INTERFACES, and the udev script starts ifplugd for all interfaces
 # listed in HOTPLUG_INTERFACES. The special value all starts one
 # ifplugd for all interfaces being present.
-INTERFACES="auto"
-HOTPLUG_INTERFACES="all"
+#INTERFACES="auto"
+HOTPLUG_INTERFACES="wlan0"
 ARGS="-q -f -u0 -d10 -w -I"
 SUSPEND_ACTION="stop"
 
