@@ -11,13 +11,13 @@ At the moment:
 
 Run install_pispot.sh
 
-Create /boot/ssid.txt with a list of ssids to search for. Each one on a seperate line.
+The pi will reboot.
 
-At the moment put the PSK key into the wlanDHCP() function. Have a look at https://wiki.debian.org/WiFi/HowToUse#WPA-PSK_and_WPA2-PSK for info
+By default it will create a hotspot called pispot with the psk of pispotcode
 
-Reboot the Pi
+Edit /boot/ssid.txt and enter your desired AP details. Each on a seperate line with the following format: <ssid>,<psk>
 
-Look for an access point called MY_AP Password is: test1234
+Edit /boot/hotspot.txt with the details of your required hotspot. Each on a seperate line with the following format: <hotspot name>,<desired gateway>,<psk>
 
 Have a look in the dmesg output for any pispot messages
 
