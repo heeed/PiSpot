@@ -15,9 +15,9 @@ The pi will reboot.
 
 By default it will create a hotspot called pispot with the psk of pispotcode
 
-Edit /boot/ssid.txt and enter your desired AP details. Each on a seperate line with the following format: <ssid>,<psk>
+Edit /boot/ssid.txt and enter your desired AP details. Each on a seperate line with the following format: ssid,psk
 
-Edit /boot/hotspot.txt with the details of your required hotspot. Each on a seperate line with the following format: <hotspot name>,<desired gateway>,<psk>
+Edit /boot/hotspot.txt with the details of your required hotspot. Each on a seperate line with the following format: hotspot name,desired gateway,psk
 
 Have a look in the dmesg output for any pispot messages
 
