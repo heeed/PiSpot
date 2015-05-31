@@ -172,6 +172,7 @@ then
    echo "pispot: no known wireless networks found,,,starting a hotspot">/dev/kmsg
    if createAdHocNetwork; then
         echo "pispot: hotspot created" > /dev/kmsg
+	/etc/init.d/isc-dhcp-server start
    else
         echo "pispot: hotspot failed" > /dev/kmsg
    fi
