@@ -12,9 +12,9 @@
 # listed in HOTPLUG_INTERFACES. The special value all starts one
 # ifplugd for all interfaces being present.
 #INTERFACES="auto"
-HOTPLUG_INTERFACES="wlan0"
+HOTPLUG_INTERFACES="eth0"
 ARGS="-q -f -u0 -d10 -w -I"
 SUSPEND_ACTION="stop"
 
-INTERFACES="eth0"
+
 
