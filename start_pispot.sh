@@ -141,8 +141,8 @@ echo -e "hostapd up\n"
 
 getSSID "/boot/ssid.txt"
 
-echo " ">/var/lib/dhcpd/dhcpd.leases
-rm /var/lib/dhcpd/dhcpd.leases~
+echo " ">/var/lib/dhcp/dhcpd.leases
+rm /var/lib/dhcp/dhcpd.leases~
 
 needHotspot=1
 for ssid in "${ssids[@]}"
