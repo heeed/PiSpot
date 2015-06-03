@@ -8,7 +8,7 @@ getSSIDdetails(){
 	echo "pispot: extracting login details">/dev/kmsg
 	OLDIFS=$IFS
  	ssid=${ssid[@]}
-        IFS=',' read req_ssid req_psk  <<<"$ssid"
+        IFS=',' read req_ssid req_psk comment  <<<"$ssid"
 }
 
 getSSID() {
