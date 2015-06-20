@@ -67,7 +67,6 @@ fi
 fi
 
 }
-installPackage req_files/hostapd
 installPackage req_files/isc-dhcp-server
 
 #installed, so now for configuration
@@ -81,8 +80,9 @@ echo "pispot,192.168.2.1,pispotcode">/boot/hotspot.txt
 #cho "#place config as <hotspot name>,<ip address of gateway>,<psk>...this line must be at the bottom of this file :D">>/boot/hotspot.txt
 
 #set up hostapd and configuration
+#first copy hostapd v2 and then copy hostapd v 0.8
 
-mv /usr/sbin/hostapd /usr/sbin/hostapd.other
+cp ./req_files/hostapd2/hostapd /usr/sbin/hostapd.other
 cp ./req_files/new-hostapd/hostapd8 /usr/sbin/hostapd8
 cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.bak
 cp ./hostapd.conf /etc/hostapd/
