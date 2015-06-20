@@ -15,7 +15,7 @@ The pi will reboot.
 
 By default it will create a hotspot called pispot with the psk of pispotcode
 
-Edit /boot/ssid.txt and enter your desired AP details. Each on a seperate line with the following format: ssid,psk
+Edit /boot/ssid.txt and enter your desired AP details. Each on a seperate line with the following format: ssid,psk,comment
 
 Edit /boot/hotspot.txt with the details of your required hotspot. Each on a seperate line with the following format: hotspot name,desired gateway,psk
 
@@ -26,6 +26,8 @@ Current hardware that seems to work is:
 Ralink Technology, Corp. RT5370 Wireless Adapter
 
 0bda:8191 Realtek Semiconductor Corp. 8191SU
+
+Official Raspberry Pi wifi dongle
 
 
 ***Still work in progress***
