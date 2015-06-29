@@ -84,6 +84,7 @@ echo "pispot,192.168.2.1,pispotcode">/boot/hotspot.txt
 
 cp ./req_files/hostapd2/hostapd /usr/sbin/hostapd.other
 cp ./req_files/new-hostapd/hostapd8 /usr/sbin/hostapd8
+mkdir -p /etc/hostapd
 cp /etc/hostapd/hostapd.conf /etc/hostapd/hostapd.conf.bak
 cp ./hostapd.conf /etc/hostapd/
 chown root:root /etc/hostapd/hostapd.conf

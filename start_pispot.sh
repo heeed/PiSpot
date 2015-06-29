@@ -29,14 +29,19 @@ getSSID() {
 getHotspotSSID(){
 
       if [ ! -f $1 ]; then
-                #echo "pispot: SSID's not found...exiting">/dev/kmsg
-                #exit 1
-                echo "hotspot file not find"
+                echo "pispot: SSID's not found...exiting">/dev/kmsg
+                exit 1
         else
+		while read line 
+		do
+			if [[ $line =~ $'\r' ]]; then
+		       		line2=$(echo $line | sed $'s/\r//')
+				line=$line2
+                	fi
         
-        echo "hotspot found"
 	        OLDIFS=$IFS
-		IFS=',' read hotspot_SSID hotspot_IP hotspot_PSK < $1
+		IFS=',' read hotspot_SSID hotspot_IP hotspot_PSK <<< "$line"
+		done < $1
      fi
 }
 
@@ -124,7 +129,6 @@ createAdHocNetwork(){
         fi
 	
 	wlanStatic
-echo -e "done wlanStatic\n"	
 	ifdown wlan0
 	ifup wlan0
 	ifdown eth0
@@ -149,12 +153,12 @@ for ssid in "${ssids[@]}"
 do
     getSSIDdetails $ssid
     echo "pispot; looking for $req_ssid">/dev/kmsg
-    if iwlist wlan0 scan | grep $req_ssid #> /dev/null
+    if iwlist wlan0 scan | grep $req_ssid > /dev/null
     then
         ifdown --force wlan0
-        wlanDHCP $req_ssid
+        wlanDHCP $req_ssid > /dev/null
         ifup wlan0
-        if dhclient -1 wlan0
+        if dhclient -1 wlan0 > /dev/null
         then
             echo "pispot: Connected to hotspot: $req_ssid" > /dev/kmsg
             needHotspot=0
