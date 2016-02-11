@@ -94,9 +94,14 @@ gateway $IP4_GATEWAY
 }
 
 createAdHocNetwork(){
+	usblist=`lsusb`
 	getHotspotSSID "/boot/hotspot.txt"
 	echo "pispot: creating hotspot">/dev/kmsg
-	sed -i '/driver/c#driver=' /etc/hostapd/hostapd.conf
+	if [[ $usblist == *148f:5370* ]];then
+		sed -i '/driver/cdriver=nl80211' /etc/hostapd/hostapd.conf
+	else
+		sed -i '/driver/c#driver=' /etc/hostapd/hostapd.conf
+	fi
 	sed -i '/ssid=/cssid='$hotspot_SSID'' /etc/hostapd/hostapd.conf
 	sed -i '/wpa_passphrase=/cwpa_passphrase='$hotspot_PSK'' /etc/hostapd/hostapd.conf
 	sed -i '/subnet /,$d' /etc/dhcp/dhcpd.conf
@@ -105,7 +110,6 @@ createAdHocNetwork(){
 }' >> /etc/dhcp/dhcpd.conf
 
 	rm /usr/sbin/hostapd
-	usblist=`lsusb`
 	killall hostapd
 
 	if [[ $usblist == *0bda:8191* ]]||[[ $usblist == *0bda:8176* ]];then

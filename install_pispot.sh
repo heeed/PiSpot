@@ -39,7 +39,7 @@ clear
 
 #check for hostapd
 
-function installPackage {
+function installPackages {
 	echo -e "${DEFT}First, lets see if the "$1" packages are installed...\n"
 
 	dpkg -l $1 | grep ^ii > /dev/null 2>&1
@@ -50,31 +50,28 @@ function installPackage {
 	else
 		echo -e "${RED}"$1" is not installed...will install now\n"
 		echo $1*
-		if checkfileExists $1*;then
+		if ! checkInternet; then
+			echo "Installing from repos"
+			apt-get install $1*
+		else
 			echo -e "${DEFT}Installing locally"
 			dpkg -i $1*
-		else
-			echo -e "${DEFT}No local copy found...trying for install from the repo's"
-
-			if checkInternet; then
-				echo -e "${RED}Internet not reachable"
-				exit 1
-			else
-				echo "Installing from repos"
-				apt-get install $1*
-			fi
 		fi
 	fi
 }
 
 if [[ `cat /etc/*-release | grep jessie` ]]
 	then
-	installPackage req_files/isc-dhcp-common_4.3.1-6+deb8u2_armhf.deb
-	installPackage req_files/isc-dhcp-server_4.3.1-6+deb8u2_armhf.deb
+	installPackages req_files/isc-dhcp-common_4.3.1-6+deb8u2_armhf.deb
+	installPackages req_files/isc-dhcp-server_4.3.1-6+deb8u2_armhf.deb
+	installPackages req_files/libnl-route-3-200.deb
+	installPackages req_files/hostapd.deb
+	installPackages req_files/libnl1_1.1-8_armhf.deb
+	installPackages req_files/libnl-dev_1.1-8_armhf.deb
 
 	else
-	installPackage req_files/isc-dhcp-common_4.2.2.dfsg.1-5+deb70u8_armhf.deb
-	installPackage req_files/isc-dhcp-server_4.2.2.dfsg.1-5+deb70u8_armhf.deb
+	installPackages req_files/isc-dhcp-common_4.2.2.dfsg.1-5+deb70u8_armhf.deb
+	installPackages req_files/isc-dhcp-server_4.2.2.dfsg.1-5+deb70u8_armhf.deb
 fi
 
 #installed, so now for configuration
