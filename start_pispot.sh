@@ -98,7 +98,7 @@ createAdHocNetwork(){
 	getHotspotSSID "/boot/hotspot.txt"
 	echo "pispot: creating hotspot">/dev/kmsg
 	if [[ $usblist == *148f:5370* ]];then
-		echo "driver=nl80211" >> /etc/hostapd/hostapd.conf
+		sed -i '/driver/cdriver=nl80211' /etc/hostapd/hostapd.conf
 	else
 		sed -i '/driver/c#driver=' /etc/hostapd/hostapd.conf
 	fi
