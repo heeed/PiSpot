@@ -15,64 +15,13 @@ DEFT='\e[00m'
 RED='\e[00;31m'
 YELLOW='\e[00;33m'
 
-function checkfileExists {
-	#echo $1
-	if [ -f $1*.deb ]; then
-		#echo "File not found!"
-		return 1
-	else
-		#echo "fILE FOUND"
-		return 0
-	fi
-}
-
-function checkInternet {
-	wget -q --tries=3 --timeout=5 http://google.com > /dev/null
-	if [[ ! $? -eq 1 ]]; then
-		return 0
-	fi
-}
-
 #check current user privileges
 (( `id -u` )) && echo -e "${RED}This script MUST be ran with root privileges, try prefixing with sudo. i.e sudo $0" && exit 1
 clear
 
 #check for hostapd
-
-function installPackages {
-	echo -e "${DEFT}First, lets see if the "$1" packages are installed...\n"
-
-	dpkg -l $1 | grep ^ii > /dev/null 2>&1
-	INSTALLED=$?
-
-	if [ $INSTALLED == '0' ]; then
-		echo -e "${GREEN}$1 is installed...moving on\n"
-	else
-		echo -e "${RED}"$1" is not installed...will install now\n"
-		echo $1*
-		if ! checkInternet; then
-			echo "Installing from repos"
-			apt-get install $1*
-		else
-			echo -e "${DEFT}Installing locally"
-			dpkg -i $1*
-		fi
-	fi
-}
-
-if [[ `cat /etc/*-release | grep jessie` ]]
-	then
-	installPackages req_files/isc-dhcp-common_4.3.1-6+deb8u2_armhf.deb
-	installPackages req_files/isc-dhcp-server_4.3.1-6+deb8u2_armhf.deb
-	installPackages req_files/libnl-route-3-200.deb
-	installPackages req_files/hostapd.deb
-	installPackages req_files/libnl1_1.1-8_armhf.deb
-	installPackages req_files/libnl-dev_1.1-8_armhf.deb
-
-	else
-	installPackages req_files/isc-dhcp-common_4.2.2.dfsg.1-5+deb70u8_armhf.deb
-	installPackages req_files/isc-dhcp-server_4.2.2.dfsg.1-5+deb70u8_armhf.deb
-fi
+apt-get update
+apt-get install isc-dhcp-server isc-dhcp-common hostapd libnl-dev
 
 #installed, so now for configuration
 
