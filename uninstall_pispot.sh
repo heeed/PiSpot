@@ -16,7 +16,7 @@ cp /usr/share/pispot/backup/dhclient.conf /etc/dhcp/dhclient.conf
 rm -rf /etc/hostapd
 sed -i '/start_pispot.sh/d' /etc/rc.local
 
-apt-get purge -y hostapd isc-dhcp-server
+apt-get remove --purge -y hostapd isc-dhcp-server isc-dhcp-common libnl-dev
 
 if [[ `cat /etc/*-release | grep jessie` ]]
 then
