@@ -104,20 +104,25 @@ gateway $IP4_GATEWAY
 
 createAdHocNetwork(){
 	
-	getHotspotSSID "/boot/hotspot.txt"
 
+	usblist=`lsusb`
+	getHotspotSSID "/boot/hotspot.txt"
 	echo "pispot: creating hotspot">/dev/kmsg
+	
+	if [[ $usblist == *148:5370* ]];then
+		sed -i '/driver/cdriver=nl80211' /etc/hostapd/hostapd.conf
+		echo "pispot: using driver: nl80211 in hostapd">/dev/kmsg
+	else:
+		sed -i '/driver/c#driver=' /etc/hostapd/hostapd.conf
+		echo "pispot: hashing out driver in hostapd">/dev/kmsg
+	fi		
 	sed -i '/driver/c#driver=' /etc/hostapd/hostapd.conf
         sed -i '/ssid=/cssid='$hotspot_SSID'' /etc/hostapd/hostapd.conf
         sed -i '/wpa_passphrase=/cwpa_passphrase='$hotspot_PSK'' /etc/hostapd/hostapd.conf
-	
-        sed -i '/subnet /,$d' /etc/dhcp/dhcpd.conf
-	echo 'subnet '${hotspot_IP%?}0 ' netmask 255.255.255.0 {
-  range '${hotspot_IP%?}5' '${hotspot_IP%?}100'; 
-}' >> /etc/dhcp/dhcpd.conf	
+	sed -i '/subnet /,$d' /etc/dhcp/dhcpd.conf
+	echo 'subnet '${hotspot_IP%?}0 ' netmask 255.255.255.0 {range '${hotspot_IP%?}5' '${hotspot_IP%?}100';}' >> /etc/dhcp/dhcpd.conf	
 
 	rm /usr/sbin/hostapd
-        usblist=`lsusb`
 	killall hostapd
         
         if [[ $usblist == *0bda:8191* ]]||[[ $usblist == *0bda:8176* ]];then

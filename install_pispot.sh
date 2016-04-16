@@ -15,6 +15,11 @@ DEFT='\e[00m'
 RED='\e[00;31m'
 YELLOW='\e[00;33m'
 
+#check current user privileges
+(( `id -u` )) && echo -e "${RED}This script MUST be ran with root privileges, try prefixing with sudo. i.e sudo $0" && exit 1
+clear
+
+
 function checkfileExists {
 #echo $1
 if [ -f $1*.deb ]; then
@@ -27,17 +32,18 @@ fi
 }
 
 function checkInternet {
-wget -q --tries=3 --timeout=5 http://google.com > /dev/null
-if [[ ! $? -eq 1 ]]; then
-	return 0
+
+wget -q --spider archive.raspbian.org
+
+if [ $? -eq 0 ]; then
+        return 1
+else
+        return 0
 fi
+
 }
 
-#check current user privileges
-(( `id -u` )) && echo -e "${RED}This script MUST be ran with root privileges, try prefixing with sudo. i.e sudo $0" && exit 1
-clear
 
-#check for hostapd
 
 function installPackage {
 echo -e "${DEFT}First, lets see if the "$1" packages are installed...\n"
@@ -50,6 +56,7 @@ if [ $INSTALLED == '0' ]; then
     else
         echo -e "${RED}"$1" is not installed...will install now\n"
 	echo $1*    
+	
 	if checkfileExists $1*;then
 		echo -e "${DEFT}Installing locally"
 		dpkg -i $1*
@@ -57,10 +64,10 @@ if [ $INSTALLED == '0' ]; then
 		echo -e "${DEFT}No local copy found...trying for install from the repo's"
 
 		if checkInternet; then
-        		echo -e "${RED}Internet not reachable"
+        		echo -e "${RED}Internet not reachable...and no local copies..stopping :("
 		       exit 1
 		else
-			echo "Installing from repos"
+			echo "Internet reachable...Installing from repos"
 			apt-get install $1*
 		fi
 fi
@@ -71,11 +78,13 @@ fi
 if [[ `cat /etc/*-release | grep jessie` ]]
 then
 
-	installPackage req_files/isc-dhcp-server_4.3.1-6_armhf.deb
+	installPackage req_files/isc-dhcp-server_4.3.1-6+deb8u2_armhf.deb
 else
 	installPackage req_files/isc-dhcp-server_4.2.2.dfsg.1-5+deb70u6_armhf.deb 
 fi
 
+installPackage req_files/libnl1_1.1-8_armhf.deb 
+installPackage req_files/libnl-dev_1.1-8_armhf.deb
 #installed, so now for configuration
 
 #intstall the start script, backup exisiting config files and copy uninstall script
@@ -136,4 +145,4 @@ echo "Setting up autostart of pispot"
 sed -i '$i/usr/share/pispot/start_pispot.sh' /etc/rc.local
 
 #reboot the pi
-reboot
+#reboot

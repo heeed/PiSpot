@@ -25,4 +25,4 @@ fi
 
 rm -rf /usr/share/pispot
 
-reboot
+#reboot
