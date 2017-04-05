@@ -71,7 +71,7 @@ fi
 if [[ `cat /etc/*-release | grep jessie` ]]
 then
 
-	installPackage req_files/isc-dhcp-server_4.3.1-6_armhf.deb
+ 	isc-dhcp-server_4.3.1-6+deb8u2_armhf.deb
 else
 	installPackage req_files/isc-dhcp-server_4.2.2.dfsg.1-5+deb70u6_armhf.deb 
 fi
